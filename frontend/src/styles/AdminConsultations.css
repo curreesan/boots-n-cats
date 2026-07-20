@@ -1,0 +1,48 @@
+.admin-consultations {
+  max-width: 80rem;
+  margin: 0 auto;
+  padding: var(--space-lg);
+}
+
+.admin-consultations__heading {
+  font-size: var(--font-size-xl);
+  font-weight: 700;
+  margin-bottom: var(--space-lg);
+  color: var(--color-primary-dark);
+}
+
+.admin-consultations__status {
+  color: var(--color-text-muted);
+  padding: var(--space-lg);
+}
+
+.admin-consultations__list {
+  display: flex;
+  flex-direction: column;
+  background: var(--color-surface);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+}
+
+.admin-consultations__row {
+  display: flex;
+  justify-content: space-between;
+  padding: var(--space-md) var(--space-lg);
+  border-bottom: 1px solid var(--color-border);
+  font-size: var(--font-size-sm);
+}
+
+.admin-consultations__row:last-child {
+  border-bottom: none;
+}
+
+.admin-consultations__contact {
+  font-weight: 600;
+  color: var(--color-primary-dark);
+}
+
+.admin-consultations__time,
+.admin-consultations__date {
+  color: var(--color-text-muted);
+}

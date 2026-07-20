@@ -1,0 +1,54 @@
+.account {
+  max-width: 50rem;
+  margin: 0 auto;
+  padding: var(--space-lg);
+}
+
+.account__status {
+  padding: var(--space-lg);
+  color: var(--color-text-muted);
+}
+
+.account__heading {
+  font-size: var(--font-size-xl);
+  margin-bottom: var(--space-lg);
+}
+
+.account__card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  margin-bottom: var(--space-lg);
+}
+
+.account__row {
+  display: flex;
+  justify-content: space-between;
+  padding: var(--space-md) var(--space-lg);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.account__row:last-child {
+  border-bottom: none;
+}
+
+.account__label {
+  color: var(--color-text-muted);
+  font-weight: 600;
+}
+
+.account__logout {
+  background: none;
+  border: 1px solid var(--color-error);
+  color: var(--color-error);
+  padding: var(--space-sm) var(--space-lg);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-size: var(--font-size-sm);
+}
+
+.account__logout:hover {
+  background: var(--color-error);
+  color: white;
+}

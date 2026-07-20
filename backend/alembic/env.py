@@ -16,7 +16,7 @@ from app.core.config import settings
 # Import every model module so its table registers on SQLModel.metadata —
 # alembic can only "see" a table if it's been imported somewhere by the
 # time this file runs. If you add a new model file later, add it here too.
-from app.models import user, product, pet, cart, order, consultation  # noqa: F401
+from app.models import user, product, pet, order, consultation  # noqa: F401
 
 config = context.config
 

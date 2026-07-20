@@ -1,0 +1,48 @@
+:root {
+  --color-primary: #f2703f;
+  --color-primary-dark: #d95a2b;
+  --color-primary-light: #fde0d0;
+
+  --color-secondary: #2f9e88;
+  --color-secondary-dark: #237a68;
+  --color-secondary-light: #d6f0ea;
+
+  --color-dog: #4a7fd9;
+  --color-dog-light: #e1eaff;
+  --color-cat: #9b59d0;
+  --color-cat-light: #f0e2fa;
+
+  --color-background: #fff8f2;
+  --color-surface: #ffffff;
+  --color-text: #3a2f28;
+  --color-text-muted: #8a7d72;
+  --color-border: #f0ddd0;
+  --color-error: #c0453b;
+  --color-success: #4e8e5e;
+
+  --space-xs: 0.4rem;
+  --space-sm: 0.8rem;
+  --space-md: 1.6rem;
+  --space-lg: 2.4rem;
+  --space-xl: 4rem;
+
+  --radius-sm: 0.6rem;
+  --radius-md: 1.2rem;
+  --radius-lg: 2rem;
+
+  --font-family: "Segoe UI", system-ui, sans-serif;
+  --font-size-sm: 1.4rem;
+  --font-size-md: 1.6rem;
+  --font-size-lg: 2rem;
+  --font-size-xl: 2.8rem;
+
+  --shadow-sm: 0 1px 3px rgba(58, 47, 40, 0.08);
+  --shadow-md: 0 4px 12px rgba(58, 47, 40, 0.1);
+  --shadow-lg: 0 8px 24px rgba(58, 47, 40, 0.12);
+
+  --gradient-hero: linear-gradient(
+    135deg,
+    var(--color-primary),
+    var(--color-secondary)
+  );
+}

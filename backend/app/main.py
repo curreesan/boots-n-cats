@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.routers import auth, products, pets, cart, orders, consultations, admin
+from app.routers import auth, products, pets, orders, consultations, admin
 from fastapi.responses import HTMLResponse
 from pathlib import Path
 
@@ -21,7 +21,6 @@ app.add_middleware(
 app.include_router(auth.router)
 app.include_router(products.router)
 app.include_router(pets.router)
-app.include_router(cart.router)
 app.include_router(orders.router)
 app.include_router(consultations.router)
 app.include_router(admin.router)
