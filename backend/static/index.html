@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Boots and Cats API</title>
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        background: #f9f9f8;
+        color: #1a1a1a;
+        padding: 3rem 1.5rem;
+        min-height: 100vh;
+      }
+      .container {
+        max-width: 640px;
+        margin: 0 auto;
+      }
+      h1 {
+        font-size: 20px;
+        font-weight: 500;
+        margin-bottom: 4px;
+      }
+      .version {
+        font-size: 12px;
+        color: #888;
+        font-family: monospace;
+        margin-bottom: 1rem;
+      }
+      .docs-link {
+        font-size: 12px;
+        margin-bottom: 2.5rem;
+      }
+      .docs-link a {
+        color: #185fa5;
+      }
+      .section {
+        margin-bottom: 2rem;
+      }
+      .section-label {
+        font-size: 11px;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.07em;
+        color: #888;
+        margin-bottom: 8px;
+      }
+      .route {
+        display: flex;
+        align-items: baseline;
+        gap: 12px;
+        padding: 7px 0;
+        border-bottom: 1px solid #ebebeb;
+      }
+      .route:last-child {
+        border-bottom: none;
+      }
+      .method {
+        font-family: monospace;
+        font-size: 11px;
+        font-weight: 600;
+        min-width: 44px;
+      }
+      .get {
+        color: #0f6e56;
+      }
+      .post {
+        color: #185fa5;
+      }
+      .patch {
+        color: #534ab7;
+      }
+      .delete {
+        color: #a32d2d;
+      }
+      .path {
+        font-family: monospace;
+        font-size: 12px;
+        color: #1a1a1a;
+        min-width: 240px;
+      }
+      .desc {
+        font-size: 12px;
+        color: #888;
+      }
+      @media (max-width: 480px) {
+        .route {
+          flex-wrap: wrap;
+          gap: 4px;
+        }
+        .desc {
+          width: 100%;
+          padding-left: 56px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Boots and Cats API</h1>
+      <div class="version">v0.1.0</div>
+      <div class="docs-link">Interactive docs at <a href="/docs">/docs</a></div>
+
+      <div class="section">
+        <div class="section-label">Auth</div>
+        <div class="route">
+          <span class="method post">POST</span
+          ><span class="path">/auth/register</span
+          ><span class="desc">Create an account, logs in immediately</span>
+        </div>
+        <div class="route">
+          <span class="method post">POST</span
+          ><span class="path">/auth/login</span
+          ><span class="desc">Log in with email + password</span>
+        </div>
+        <div class="route">
+          <span class="method post">POST</span
+          ><span class="path">/auth/logout</span
+          ><span class="desc">Clear auth cookies</span>
+        </div>
+        <div class="route">
+          <span class="method get">GET</span><span class="path">/auth/me</span
+          ><span class="desc">Current logged-in user</span>
+        </div>
+        <div class="route">
+          <span class="method post">POST</span
+          ><span class="path">/auth/refresh</span
+          ><span class="desc">Mint a new access token</span>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-label">Products</div>
+        <div class="route">
+          <span class="method get">GET</span><span class="path">/products</span
+          ><span class="desc">List products, filter by species/category</span>
+        </div>
+        <div class="route">
+          <span class="method get">GET</span
+          ><span class="path">/products/:id</span
+          ><span class="desc">Single product</span>
+        </div>
+        <div class="route">
+          <span class="method get">GET</span
+          ><span class="path">/products/categories/all</span
+          ><span class="desc">Distinct categories</span>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-label">Pets</div>
+        <div class="route">
+          <span class="method get">GET</span><span class="path">/pets</span
+          ><span class="desc">List pets, filter by species</span>
+        </div>
+        <div class="route">
+          <span class="method get">GET</span><span class="path">/pets/:id</span
+          ><span class="desc">Single pet profile</span>
+        </div>
+        <div class="route">
+          <span class="method get">GET</span
+          ><span class="path">/pets/breeds/all</span
+          ><span class="desc">Distinct breeds</span>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-label">Cart</div>
+        <div class="route">
+          <span class="method get">GET</span><span class="path">/cart</span
+          ><span class="desc">Your cart — auth required</span>
+        </div>
+        <div class="route">
+          <span class="method post">POST</span
+          ><span class="path">/cart/items</span
+          ><span class="desc">Add an item — auth required</span>
+        </div>
+        <div class="route">
+          <span class="method patch">PATCH</span
+          ><span class="path">/cart/items/:id</span
+          ><span class="desc">Update quantity — auth required</span>
+        </div>
+        <div class="route">
+          <span class="method delete">DELETE</span
+          ><span class="path">/cart/items/:id</span
+          ><span class="desc">Remove an item — auth required</span>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-label">Orders</div>
+        <div class="route">
+          <span class="method post">POST</span><span class="path">/orders</span
+          ><span class="desc">Checkout — auth required</span>
+        </div>
+        <div class="route">
+          <span class="method get">GET</span><span class="path">/orders</span
+          ><span class="desc">Your order history — auth required</span>
+        </div>
+        <div class="route">
+          <span class="method get">GET</span
+          ><span class="path">/orders/:id</span
+          ><span class="desc">Single order + items — auth required</span>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-label">Adoption</div>
+        <div class="route">
+          <span class="method post">POST</span
+          ><span class="path">/adoption-consultations</span
+          ><span class="desc">Request a consultation — auth required</span>
+        </div>
+        <div class="route">
+          <span class="method get">GET</span
+          ><span class="path">/adoption-consultations</span
+          ><span class="desc">Your own requests — auth required</span>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-label">Admin — staff only</div>
+        <div class="route">
+          <span class="method post">POST</span
+          ><span class="path">/admin/products</span
+          ><span class="desc">Create a product</span>
+        </div>
+        <div class="route">
+          <span class="method patch">PATCH</span
+          ><span class="path">/admin/products/:id</span
+          ><span class="desc">Update a product</span>
+        </div>
+        <div class="route">
+          <span class="method delete">DELETE</span
+          ><span class="path">/admin/products/:id</span
+          ><span class="desc">Delete a product</span>
+        </div>
+        <div class="route">
+          <span class="method post">POST</span
+          ><span class="path">/admin/pets</span
+          ><span class="desc">Create a pet listing</span>
+        </div>
+        <div class="route">
+          <span class="method patch">PATCH</span
+          ><span class="path">/admin/pets/:id</span
+          ><span class="desc">Update a pet listing</span>
+        </div>
+        <div class="route">
+          <span class="method delete">DELETE</span
+          ><span class="path">/admin/pets/:id</span
+          ><span class="desc">Delete a pet listing</span>
+        </div>
+        <div class="route">
+          <span class="method get">GET</span
+          ><span class="path">/admin/adoption-consultations</span
+          ><span class="desc">All requests, oldest first</span>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

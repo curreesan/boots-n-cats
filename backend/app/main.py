@@ -1,8 +1,19 @@
 from fastapi import FastAPI
-
+from fastapi.middleware.cors import CORSMiddleware
 from app.routers import auth, products, pets, cart, orders, consultations, admin
+from fastapi.responses import HTMLResponse
+from pathlib import Path
 
 app = FastAPI(title="Boots and Cats API")
+
+# Add CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173"],  # Vite's default dev server address
+    allow_credentials=True, # lets the browser send/receive our auth cookies cross-origin
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # Each router owns one resource's endpoints — matches the domain breakdown
 # we designed earlier. This file's only job is wiring things together;
@@ -15,6 +26,15 @@ app.include_router(orders.router)
 app.include_router(consultations.router)
 app.include_router(admin.router)
 
+@app.get("/", response_class=HTMLResponse)
+async def root():
+    """
+    Serves the static route-index page at the bare root URL — this is what
+    used to 404 back when we first started the server. Not a real API
+    endpoint, just a human-readable map of what's available.
+    """
+    html_path = Path(__file__).parent.parent / "static" / "index.html"
+    return html_path.read_text(encoding="utf-8")
 
 @app.get("/health")
 async def health():
