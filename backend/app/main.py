@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.routers import auth, products, pets, orders, consultations, admin, knowledge
+from app.routers import auth, products, pets, orders, consultations, admin, knowledge, chat, websocket_chat
 from fastapi.responses import HTMLResponse
 from pathlib import Path
 
@@ -25,6 +25,8 @@ app.include_router(orders.router)
 app.include_router(consultations.router)
 app.include_router(admin.router)
 app.include_router(knowledge.router)
+app.include_router(chat.router)
+app.include_router(websocket_chat.router)
 
 @app.get("/", response_class=HTMLResponse)
 async def root():
