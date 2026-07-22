@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.routers import auth, products, pets, orders, consultations, admin
+from app.routers import auth, products, pets, orders, consultations, admin, knowledge
 from fastapi.responses import HTMLResponse
 from pathlib import Path
 
@@ -24,6 +24,7 @@ app.include_router(pets.router)
 app.include_router(orders.router)
 app.include_router(consultations.router)
 app.include_router(admin.router)
+app.include_router(knowledge.router)
 
 @app.get("/", response_class=HTMLResponse)
 async def root():

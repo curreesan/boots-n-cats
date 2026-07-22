@@ -17,6 +17,7 @@ function Navbar() {
             <>
               <Link to="/admin/catalog">Admin: Catalog</Link>
               <Link to="/admin/consultations">Admin: Requests</Link>
+              <Link to="/admin/knowledge">Admin: Knowledge</Link>
             </>
           )}
 

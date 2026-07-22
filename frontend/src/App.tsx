@@ -23,6 +23,7 @@ import Register from "./pages/Register";
 import AdminRoute from "./components/AdminRoute";
 import AdminCatalog from "./pages/admin/AdminCatalog";
 import AdminConsultations from "./pages/admin/AdminConsultations";
+import AdminKnowledge from "./pages/admin/AdminKnowledge";
 
 function App() {
   return (
@@ -52,6 +53,7 @@ function App() {
               path="admin/consultations"
               element={<AdminConsultations />}
             />
+            <Route path="admin/knowledge" element={<AdminKnowledge />} />
           </Route>
         </Route>
       </Routes>
