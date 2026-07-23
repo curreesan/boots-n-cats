@@ -81,6 +81,9 @@
       .delete {
         color: #a32d2d;
       }
+      .ws {
+        color: #b45309;
+      }
       .path {
         font-family: monospace;
         font-size: 12px;
@@ -180,18 +183,41 @@
         </div>
         <div class="route">
           <span class="method post">POST</span
-          ><span class="path">/cart/items</span
-          ><span class="desc">Add an item — auth required</span>
+          ><span class="path">/cart</span
+          ><span class="desc">Add an item (upserts quantity) — auth required</span>
         </div>
         <div class="route">
           <span class="method patch">PATCH</span
-          ><span class="path">/cart/items/:id</span
-          ><span class="desc">Update quantity — auth required</span>
+          ><span class="path">/cart/:product_id</span
+          ><span class="desc">Set exact quantity — auth required</span>
         </div>
         <div class="route">
           <span class="method delete">DELETE</span
-          ><span class="path">/cart/items/:id</span
+          ><span class="path">/cart/:product_id</span
           ><span class="desc">Remove an item — auth required</span>
+        </div>
+        <div class="route">
+          <span class="method delete">DELETE</span
+          ><span class="path">/cart</span
+          ><span class="desc">Clear the whole cart — auth required</span>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-label">Chat</div>
+        <div class="route">
+          <span class="method post">POST</span><span class="path">/chat</span
+          ><span class="desc"
+            >Plain request/response agent turn — auth required, no picker/confirm-button
+            support (see /ws/chat)</span
+          >
+        </div>
+        <div class="route">
+          <span class="method ws">WS</span><span class="path">/ws/chat</span
+          ><span class="desc"
+            >Agentic chat — search catalog/knowledge, add to cart, book a consultation, place
+            an order — auth via cookie at connect time</span
+          >
         </div>
       </div>
 
@@ -262,6 +288,17 @@
           <span class="method get">GET</span
           ><span class="path">/admin/adoption-consultations</span
           ><span class="desc">All requests, oldest first</span>
+        </div>
+        <div class="route">
+          <span class="method post">POST</span
+          ><span class="path">/admin/knowledge/upload</span
+          ><span class="desc">Upload a knowledge doc — chunks, embeds, upserts to Pinecone</span
+          >
+        </div>
+        <div class="route">
+          <span class="method get">GET</span
+          ><span class="path">/admin/knowledge</span
+          ><span class="desc">List knowledge docs + ingestion status</span>
         </div>
       </div>
     </div>
