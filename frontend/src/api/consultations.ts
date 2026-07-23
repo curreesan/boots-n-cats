@@ -2,7 +2,6 @@ import { apiFetch } from "./apiFetch";
 
 export async function createConsultation(
   petId: string,
-  contact: string,
   preferredTime: string,
 ): Promise<void> {
   const response = await apiFetch("/adoption-consultations", {
@@ -10,7 +9,6 @@ export async function createConsultation(
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       pet_id: petId,
-      contact,
       preferred_time: preferredTime,
     }),
   });

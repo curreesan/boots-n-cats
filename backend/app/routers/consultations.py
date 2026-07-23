@@ -21,12 +21,14 @@ async def create_consultation(
     Creates a consultation request for a pet. Same pattern as cart's
     add_item: user_id comes from get_current_user, never from `data` —
     AdoptionConsultationCreate has no user_id field, so a client can't
-    file a request pretending to be someone else.
+    file a request pretending to be someone else. contact is likewise
+    taken from the user's own account email, not accepted from the
+    client, for the same reason.
     """
     consultation = AdoptionConsultation(
         user_id=user.id,
         pet_id=data.pet_id,
-        contact=data.contact,
+        contact=user.email,
         preferred_time=data.preferred_time,
     )
     session.add(consultation)

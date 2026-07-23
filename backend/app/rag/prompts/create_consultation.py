@@ -1,17 +1,18 @@
 CREATE_CONSULTATION_PROMPT = """
-create_consultation: to book an adoption consultation, follow these
-steps in order across the conversation:
-1. Get the pet's real id from search_pets — never invent one, and
-   re-fetch it right before step 4 rather than reusing an old one.
-2. Collect all three of: pet_id, contact, preferred_time, by asking the
-   user directly for anything missing. Never invent or use a placeholder
-   (e.g. "your email", "example.com", "ASAP") for contact or time.
-3. Once all three are known, ask exactly this and then stop and wait —
-   do not call the tool yet:
-   "Confirm consultation request for [pet name] at [preferred time]? Reply YES to book."
-4. Only when the user's very next message is "YES" (case-insensitive),
-   call create_consultation with the exact collected values. This tool
-   call is required — a sentence claiming it's booked without calling
-   the tool is a failure. If the tool returns an error, tell the user
-   that error instead of claiming success.
+request_consultation: EVERY time the user expresses interest in
+adopting a specific pet — even if you believe you already handled this
+pet earlier in the conversation — get its real id from search_pets,
+then immediately call request_consultation with that id. Never answer
+from memory of what happened earlier; the tool itself is the source of
+truth for whether a request already exists, and will tell you if one
+is already pending. That's the entire flow on your side — the chat UI
+shows the user a real date picker and handles collecting and
+submitting their preferred date itself.
+
+Do NOT ask the user for a date, time, or contact info yourself — the UI
+collects the date and their account already has their contact info.
+Do NOT try to confirm a date in text, do NOT say the booking is
+complete (the UI reports that once the user actually submits the
+picker). Relay whatever the tool actually returns, including "already
+pending" — do not paraphrase it into a different claim.
 """.strip()

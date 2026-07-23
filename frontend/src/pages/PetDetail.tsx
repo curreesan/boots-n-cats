@@ -14,7 +14,6 @@ function PetDetail() {
   const navigate = useNavigate();
 
   const [showForm, setShowForm] = useState(false);
-  const [contact, setContact] = useState("");
   const [preferredTime, setPreferredTime] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
@@ -36,7 +35,7 @@ function PetDetail() {
     e.preventDefault();
     setSubmitError(null);
     try {
-      await createConsultation(id!, contact, preferredTime);
+      await createConsultation(id!, preferredTime);
       setSubmitted(true);
       setShowForm(false);
     } catch {
@@ -79,16 +78,13 @@ function PetDetail() {
             className="flex max-w-sm flex-col gap-3 pt-2"
             onSubmit={handleSubmit}
           >
+            <p className="text-sm text-muted-foreground">
+              We&apos;ll contact you at {user?.email}. Just pick a callback date:
+            </p>
             <Input
-              value={contact}
-              onChange={(e) => setContact(e.target.value)}
-              placeholder="Phone or email"
-              required
-            />
-            <Input
+              type="date"
               value={preferredTime}
               onChange={(e) => setPreferredTime(e.target.value)}
-              placeholder="Preferred time to call"
               required
             />
             <Button type="submit" className="w-fit">

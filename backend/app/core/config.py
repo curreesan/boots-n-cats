@@ -18,11 +18,19 @@ class Settings(BaseSettings):
     pinecone_api_key: str
     pinecone_index_name: str = "boots-and-cats-knowledge"
 
-    # Ollama (OpenAI-compatible local endpoint)
-    ollama_base_url: str = "http://localhost:11434/v1"
-    ollama_chat_model: str = "llama3.2"
-    ollama_embedding_model: str = "nomic-embed-text"
+    # Pinecone index dimension — must match whatever embedding model wrote
+    # to it (currently Cloudflare's bge-base-en-v1.5, also 768-dim).
     embedding_dimension: int = 768
+
+    # Cloudflare Workers AI (OpenAI-compatible endpoint) — chat + embedding models
+    cloudflare_account_id: str = ""
+    cloudflare_api_token: str = ""
+    cloudflare_chat_model: str = "@cf/ibm-granite/granite-4.0-h-micro"
+    cloudflare_embedding_model: str = "@cf/baai/bge-base-en-v1.5"
+
+    @property
+    def cloudflare_base_url(self) -> str:
+        return f"https://api.cloudflare.com/client/v4/accounts/{self.cloudflare_account_id}/ai/v1"
 
     # Supabase Storage (product/pet images)
     supabase_url: str

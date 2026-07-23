@@ -17,11 +17,7 @@ from app.models.user import User
 router = APIRouter(prefix="/orders", tags=["orders"])
 
 
-@router.post("")
-async def checkout(
-    user: User = Depends(get_current_user),
-    session: AsyncSession = Depends(get_session),
-):
+async def perform_checkout(user_id: uuid.UUID, session: AsyncSession) -> Order:
     """
     Checks out whatever is currently in the user's persisted cart — no
     client-supplied item list, so a tampered request body can't claim
@@ -30,14 +26,19 @@ async def checkout(
     cart, all in one transaction: nothing commits until the very end (see
     get_session's docstring), so a failure partway through leaves both
     the order and the cart untouched.
+
+    Factored out of the POST /orders route so the chat agent's checkout
+    tool can call the exact same logic directly — never duplicate this,
+    since it's the one place stock decrement + order creation atomicity
+    is guaranteed.
     """
-    cart_result = await session.exec(select(CartItem).where(CartItem.user_id == user.id))
+    cart_result = await session.exec(select(CartItem).where(CartItem.user_id == user_id))
     cart_items = cart_result.all()
     if not cart_items:
         raise HTTPException(status_code=400, detail="Cart is empty")
 
     total = 0.0
-    order = Order(user_id=user.id, total_amount=0)
+    order = Order(user_id=user_id, total_amount=0)
     session.add(order)
     await session.flush()
 
@@ -77,6 +78,14 @@ async def checkout(
     await session.commit()
     await session.refresh(order)
     return order
+
+
+@router.post("")
+async def checkout(
+    user: User = Depends(get_current_user),
+    session: AsyncSession = Depends(get_session),
+):
+    return await perform_checkout(user.id, session)
 
 
 @router.get("", response_model=PaginatedResponse[Order])

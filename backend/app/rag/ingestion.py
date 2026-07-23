@@ -49,7 +49,7 @@ async def ingest_document(
         document_id=document.id,
         version_number=next_version_number,
         status="processing",
-        embedding_model=settings.ollama_embedding_model,
+        embedding_model=settings.cloudflare_embedding_model,
     )
     session.add(version)
     await session.flush()

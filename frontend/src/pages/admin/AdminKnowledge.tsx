@@ -14,6 +14,7 @@ function AdminKnowledge() {
   const [documentType, setDocumentType] = useState("care_guide");
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [uploadedFilename, setUploadedFilename] = useState<string | null>(null);
 
   async function loadDocs() {
     const data = await getKnowledgeDocs();
@@ -35,10 +36,13 @@ function AdminKnowledge() {
 
     setUploading(true);
     setError(null);
+    setUploadedFilename(null);
     try {
+      const uploadedName = file.name;
       await uploadKnowledgeDoc(file, documentType);
       setFile(null);
       await loadDocs();
+      setUploadedFilename(uploadedName);
     } catch {
       setError("Upload failed");
     } finally {
@@ -79,6 +83,11 @@ function AdminKnowledge() {
           </form>
 
           {error && <p className="text-sm text-destructive">{error}</p>}
+          {uploadedFilename && (
+            <p className="text-sm text-green-600">
+              ✓ {uploadedFilename} ingested successfully.
+            </p>
+          )}
 
           {loading ? (
             <p className="text-sm text-muted-foreground">Loading...</p>

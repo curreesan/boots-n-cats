@@ -31,15 +31,21 @@ async def chat(
 
     Falls back to a friendly message on agent failure instead of a bare
     500, matching the websocket chat endpoint's behavior for the same
-    failure mode.
+    failure mode. Doesn't support the consultation date-picker flow
+    (that's websocket-only, see websocket_chat.py) — a picker signal
+    here just surfaces as a plain informational answer instead.
     """
-    # Captured once, before run_agent — a tool call inside it (e.g.
-    # create_consultation) may commit using this same request-scoped
-    # session, which would expire user's attributes for any access after.
     user_id = str(user.id)
     try:
-        answer = await run_agent(data.content, session, user_id, data.history)
+        result = await run_agent(data.content, session, user_id, data.history)
     except Exception:
         logger.exception("Agent error for user %s", user_id)
-        answer = "Sorry, I couldn't process your request at the moment. Please try again later."
+        result = {"type": "text", "content": "Sorry, I couldn't process your request at the moment. Please try again later."}
+
+    if result["type"] == "consultation_picker":
+        answer = f"To book a consultation for {result['pet_name']}, please use the chat widget on the site — it needs a date picker this endpoint doesn't support."
+    elif result["type"] == "checkout_confirm":
+        answer = "To place your order, please use the chat widget on the site — it needs a confirm button this endpoint doesn't support."
+    else:
+        answer = result["content"]
     return {"answer": answer}

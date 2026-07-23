@@ -51,6 +51,22 @@ export function CartProvider({ children }: { children: ReactNode }) {
     };
   }, [user]);
 
+  // Re-fetches the cart from the server without touching `loading` (no
+  // full-page spinner) — for syncing after something OUTSIDE this
+  // context's own mutation functions changed the server-side cart, e.g.
+  // the chatbot's add_to_cart tool, which the frontend has no other way
+  // of finding out about.
+  async function refreshCart() {
+    if (!user) return;
+    try {
+      const cart = await getCart();
+      setItems(cart.items);
+      setSubtotal(cart.subtotal);
+    } catch {
+      setError("Failed to refresh cart");
+    }
+  }
+
   async function addItem(productId: string, quantity = 1) {
     setError(null);
     try {
@@ -123,6 +139,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
         decreaseQuantity,
         removeItem,
         clearCart,
+        refreshCart,
       }}
     >
       {children}

@@ -11,6 +11,7 @@ export type CartContextType = {
   decreaseQuantity: (productId: string) => Promise<void>;
   removeItem: (productId: string) => Promise<void>;
   clearCart: () => Promise<void>;
+  refreshCart: () => Promise<void>;
 };
 
 export const CartContext = createContext<CartContextType | null>(null);

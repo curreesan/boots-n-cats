@@ -6,12 +6,14 @@ from sqlalchemy import Column, DateTime
 class AdoptionConsultationBase(SQLModel):
     """
     Fields shared between the table and what a client sends when creating
-    one. Notice user_id and status are NOT here — both come from
-    elsewhere, not from client input (see below).
+    one. Notice user_id, status, and contact are NOT here — contact is
+    derived server-side from the logged-in user's account email rather
+    than trusted from client input, since the chat agent proved
+    unreliable about actually asking for it instead of inventing a
+    placeholder. See AdoptionConsultationCreate below for the client shape.
     """
 
     pet_id: uuid.UUID = Field(foreign_key="pets.id")
-    contact: str
     preferred_time: str  # free text — no calendar/slot logic for now
 
 
@@ -25,6 +27,7 @@ class AdoptionConsultation(AdoptionConsultationBase, table=True):
 
     id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
     user_id: uuid.UUID = Field(foreign_key="users.id", index=True)
+    contact: str  # snapshotted from the user's account email at request time
 
     # Unused today — the contacted/scheduled/completed workflow was
     # deliberately deferred (see earlier discussion), but adding this

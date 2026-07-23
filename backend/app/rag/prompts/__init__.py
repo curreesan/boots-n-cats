@@ -10,6 +10,7 @@ from app.rag.prompts.search_knowledge import SEARCH_KNOWLEDGE_PROMPT
 from app.rag.prompts.search_products import SEARCH_PRODUCTS_PROMPT
 from app.rag.prompts.search_pets import SEARCH_PETS_PROMPT
 from app.rag.prompts.add_to_cart import ADD_TO_CART_PROMPT
+from app.rag.prompts.request_checkout import REQUEST_CHECKOUT_PROMPT
 from app.rag.prompts.create_consultation import CREATE_CONSULTATION_PROMPT
 
 
@@ -21,5 +22,6 @@ def build_system_prompt() -> str:
         SEARCH_PRODUCTS_PROMPT,
         SEARCH_PETS_PROMPT,
         ADD_TO_CART_PROMPT,
+        REQUEST_CHECKOUT_PROMPT,
         CREATE_CONSULTATION_PROMPT,
     ])
