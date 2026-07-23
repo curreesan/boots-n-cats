@@ -5,10 +5,7 @@ from app.models.product import Product
 from app.models.pet import Pet
 from app.rag.retrieval import search_knowledge
 
-PRODUCT_CATEGORIES = [
-    "toy", "mat", "bed", "food", "furniture", "grooming",
-    "hygiene", "feeding", "apparel", "accessory", "travel",
-]
+PRODUCT_CATEGORIES = ["food", "furniture", "toy", "accessory", "others"]
 
 
 def _normalize(value: str) -> str:

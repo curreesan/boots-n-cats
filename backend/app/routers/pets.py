@@ -50,13 +50,3 @@ async def get_pet(pet_id: str, session: AsyncSession = Depends(get_session)):
     if not pet or not pet.is_active:
         raise NotFoundError("Pet not found")
     return pet
-
-
-@router.get("/breeds/all")
-async def list_breeds(session: AsyncSession = Depends(get_session)):
-    """
-    Returns every distinct breed currently in use — powers a filter
-    dropdown, same idea as list_categories in products.py.
-    """
-    result = await session.exec(select(Pet.breed).distinct())
-    return result.all()

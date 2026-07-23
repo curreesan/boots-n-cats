@@ -18,11 +18,8 @@ from app.models.product import Product
 from app.models.user import User
 
 PRODUCTS = [
-    Product(name="Squeaky Bone Toy", species="dog", category="toy", price=299, stock_quantity=50),
-    Product(name="Cozy Cat Mat", species="cat", category="mat", price=799, stock_quantity=30),
-    Product(name="Orthopedic Dog Bed", species="dog", category="bed", price=2499, stock_quantity=15),
-    Product(name="Feather Wand Toy", species="cat", category="toy", price=349, stock_quantity=40),
-    Product(name="Premium Kibble 5kg", species="dog", category="food", price=1299, stock_quantity=60),
+    Product(name="Cozy Cat Mat", species="cat", category="furniture", price=799, stock_quantity=30),
+    Product(name="Orthopedic Dog Bed", species="dog", category="furniture", price=2499, stock_quantity=15),
 ]
 
 PETS = [

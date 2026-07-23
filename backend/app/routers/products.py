@@ -59,9 +59,8 @@ async def get_product(product_id: str, session: AsyncSession = Depends(get_sessi
 @router.get("/categories/all")
 async def list_categories(session: AsyncSession = Depends(get_session)):
     """
-    Returns every distinct category currently in use (e.g. "toy", "bed",
-    "food") — powers the filter dropdown on the /products listing page,
-    without hardcoding the category list anywhere in the frontend.
+    Returns every distinct category currently in use among active
+    products — powers the category filter dropdown on the /products page.
     """
-    result = await session.exec(select(Product.category).distinct())
+    result = await session.exec(select(Product.category).distinct().where(Product.is_active))
     return result.all()

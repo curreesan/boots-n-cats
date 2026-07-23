@@ -31,3 +31,9 @@ export async function getProduct(id: string): Promise<Product> {
   if (!response.ok) throw new Error("Failed to fetch product");
   return response.json();
 }
+
+export async function getProductCategories(): Promise<string[]> {
+  const response = await apiFetch("/products/categories/all");
+  if (!response.ok) throw new Error("Failed to fetch categories");
+  return response.json();
+}

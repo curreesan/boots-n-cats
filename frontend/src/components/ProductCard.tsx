@@ -3,6 +3,7 @@ import type { Product } from "../types/product";
 import { useCart } from "../context/useCart";
 import { useAuth } from "../context/useAuth";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import SpeciesBadge from "./SpeciesBadge";
 
@@ -39,7 +40,12 @@ function ProductCard({ product }: ProductCardProps) {
         </div>
       </Link>
       <CardContent className="flex flex-col gap-2 px-4 py-4">
-        <SpeciesBadge species={product.species} />
+        <div className="flex flex-wrap gap-1.5">
+          <SpeciesBadge species={product.species} />
+          <Badge variant="secondary" className="capitalize">
+            {product.category}
+          </Badge>
+        </div>
         <Link
           to={`/products/${product.id}`}
           className="truncate font-medium hover:text-primary"

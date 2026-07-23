@@ -3,6 +3,7 @@ import { useProduct } from "../hooks/useProduct";
 import { useCart } from "../context/useCart";
 import { useAuth } from "../context/useAuth";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import SpeciesBadge from "../components/SpeciesBadge";
 
 function ProductDetail() {
@@ -40,11 +41,13 @@ function ProductDetail() {
       </div>
 
       <div className="flex flex-col gap-4">
-        <SpeciesBadge species={product.species} />
+        <div className="flex flex-wrap gap-1.5">
+          <SpeciesBadge species={product.species} />
+          <Badge variant="secondary" className="capitalize">
+            {product.category}
+          </Badge>
+        </div>
         <h1 className="text-3xl font-bold">{product.name}</h1>
-        <p className="text-sm text-muted-foreground capitalize">
-          {product.category}
-        </p>
         <p className="text-2xl font-semibold text-primary">
           ₹{product.price}
         </p>
