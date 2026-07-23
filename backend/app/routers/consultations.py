@@ -1,8 +1,9 @@
-from fastapi import APIRouter, Depends
-from sqlmodel import select
+from fastapi import APIRouter, Depends, Query
+from sqlmodel import select, func
 from sqlmodel.ext.asyncio.session import AsyncSession
 
 from app.core.database import get_session
+from app.core.pagination import PaginatedResponse
 from app.dependencies.auth import get_current_user
 from app.models.consultation import AdoptionConsultation, AdoptionConsultationCreate
 from app.models.user import User
@@ -34,18 +35,30 @@ async def create_consultation(
     return consultation
 
 
-@router.get("")
+@router.get("", response_model=PaginatedResponse[AdoptionConsultation])
 async def list_own_consultations(
+    limit: int = Query(default=20, ge=1, le=100),
+    offset: int = Query(default=0, ge=0),
     user: User = Depends(get_current_user),
     session: AsyncSession = Depends(get_session),
 ):
     """
-    Returns only the logged-in user's own consultation requests — powers
-    the "your requests" section of /account. Deliberately does NOT return
-    everyone's requests; that's what /admin/adoption-consultations
-    (next file) is for, and it requires staff.
+    Returns a page of only the logged-in user's own consultation requests —
+    powers the "your requests" section of /account. Deliberately does NOT
+    return everyone's requests; that's what /admin/adoption-consultations
+    (next file) is for, and it requires staff. Same pagination shape as
+    every other list endpoint.
     """
+    total = (
+        await session.exec(
+            select(func.count()).select_from(AdoptionConsultation).where(AdoptionConsultation.user_id == user.id)
+        )
+    ).one()
     result = await session.exec(
-        select(AdoptionConsultation).where(AdoptionConsultation.user_id == user.id)
+        select(AdoptionConsultation)
+        .where(AdoptionConsultation.user_id == user.id)
+        .order_by(AdoptionConsultation.created_at.desc())
+        .offset(offset)
+        .limit(limit)
     )
-    return result.all()
+    return PaginatedResponse(items=result.all(), total=total, limit=limit, offset=offset)

@@ -1,16 +1,6 @@
 import { useState, useEffect } from "react";
-import { API_BASE_URL } from "../../api/config";
-import "../../styles/AdminConsultations.css";
-
-type Consultation = {
-  id: string;
-  user_id: string;
-  pet_id: string;
-  contact: string;
-  preferred_time: string;
-  status: string;
-  created_at: string;
-};
+import { getAdminConsultations, type Consultation } from "../../api/consultations";
+import { Card } from "@/components/ui/card";
 
 function AdminConsultations() {
   const [consultations, setConsultations] = useState<Consultation[]>([]);
@@ -18,13 +8,7 @@ function AdminConsultations() {
 
   useEffect(() => {
     async function load() {
-      const response = await fetch(
-        `${API_BASE_URL}/admin/adoption-consultations`,
-        {
-          credentials: "include",
-        },
-      );
-      const data = await response.json();
+      const data = await getAdminConsultations();
       setConsultations(data);
       setLoading(false);
     }
@@ -32,28 +16,31 @@ function AdminConsultations() {
   }, []);
 
   if (loading)
-    return <div className="admin-consultations__status">Loading...</div>;
+    return <div className="py-12 text-muted-foreground">Loading...</div>;
 
   return (
-    <div className="admin-consultations">
-      <h1 className="admin-consultations__heading">Consultation Requests</h1>
+    <div className="flex flex-col gap-6 py-10">
+      <h1 className="text-3xl font-bold">Consultation Requests</h1>
 
       {consultations.length === 0 ? (
-        <div className="admin-consultations__status">No requests yet.</div>
+        <p className="text-muted-foreground">No requests yet.</p>
       ) : (
-        <div className="admin-consultations__list">
-          {consultations.map((c) => (
-            <div key={c.id} className="admin-consultations__row">
-              <span className="admin-consultations__contact">{c.contact}</span>
-              <span className="admin-consultations__time">
-                {c.preferred_time}
-              </span>
-              <span className="admin-consultations__date">
+        <Card className="gap-0 overflow-hidden py-0">
+          {consultations.map((c, i) => (
+            <div
+              key={c.id}
+              className={`flex items-center justify-between px-6 py-4 text-sm ${
+                i !== consultations.length - 1 ? "border-b border-border" : ""
+              }`}
+            >
+              <span className="font-medium">{c.contact}</span>
+              <span className="text-muted-foreground">{c.preferred_time}</span>
+              <span className="text-muted-foreground">
                 {new Date(c.created_at).toLocaleString()}
               </span>
             </div>
           ))}
-        </div>
+        </Card>
       )}
     </div>
   );

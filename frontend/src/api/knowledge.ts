@@ -1,4 +1,4 @@
-import { API_BASE_URL } from "./config";
+import { apiFetch } from "./apiFetch";
 
 export type KnowledgeDoc = {
   id: string;
@@ -13,9 +13,8 @@ export async function uploadKnowledgeDoc(file: File, documentType: string) {
   formData.append("file", file);
   formData.append("document_type", documentType);
 
-  const response = await fetch(`${API_BASE_URL}/admin/knowledge/upload`, {
+  const response = await apiFetch("/admin/knowledge/upload", {
     method: "POST",
-    credentials: "include",
     body: formData,
   });
 
@@ -24,9 +23,7 @@ export async function uploadKnowledgeDoc(file: File, documentType: string) {
 }
 
 export async function getKnowledgeDocs(): Promise<KnowledgeDoc[]> {
-  const response = await fetch(`${API_BASE_URL}/admin/knowledge`, {
-    credentials: "include",
-  });
+  const response = await apiFetch("/admin/knowledge");
   if (!response.ok) throw new Error("Failed to fetch documents");
   return response.json();
 }

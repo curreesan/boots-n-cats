@@ -1,44 +1,83 @@
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useProduct } from "../hooks/useProduct";
 import { useCart } from "../context/useCart";
+import { useAuth } from "../context/useAuth";
+import { Button } from "@/components/ui/button";
 import SpeciesBadge from "../components/SpeciesBadge";
-import "../styles/ProductDetail.css";
 
 function ProductDetail() {
   const { id } = useParams<{ id: string }>();
   const { product, loading, error } = useProduct(id!);
   const { items, addItem, increaseQuantity, decreaseQuantity } = useCart();
+  const { user } = useAuth();
+  const navigate = useNavigate();
 
-  if (loading) return <div className="product-detail__status">Loading...</div>;
+  if (loading)
+    return <div className="py-12 text-muted-foreground">Loading...</div>;
   if (error || !product)
-    return <div className="product-detail__status">Product not found.</div>;
+    return <div className="py-12 text-muted-foreground">Product not found.</div>;
 
-  const line = items.find((l) => l.product.id === product.id);
+  const line = items.find((l) => l.product_id === product.id);
+
+  function handleAdd() {
+    if (!user) {
+      navigate("/login");
+      return;
+    }
+    void addItem(product!.id);
+  }
 
   return (
-    <div className="product-detail">
-      <SpeciesBadge species={product.species} />
-      <h1 className="product-detail__name">{product.name}</h1>
-      <div className="product-detail__meta">{product.category}</div>
-      <div className="product-detail__price">₹{product.price}</div>
-      <div className="product-detail__stock">
-        In stock: {product.stock_quantity}
+    <div className="grid grid-cols-1 gap-10 py-10 md:grid-cols-2">
+      <div className="aspect-[4/3] w-full overflow-hidden rounded-xl bg-muted">
+        {product.image_url && (
+          <img
+            src={product.image_url}
+            alt={product.name}
+            className="size-full object-cover"
+          />
+        )}
       </div>
 
-      {line ? (
-        <div className="product-detail__qty">
-          <button onClick={() => decreaseQuantity(product.id)}>-</button>
-          <span>{line.quantity}</span>
-          <button onClick={() => increaseQuantity(product.id)}>+</button>
-        </div>
-      ) : (
-        <button
-          className="product-detail__add"
-          onClick={() => addItem(product)}
-        >
-          Add to cart
-        </button>
-      )}
+      <div className="flex flex-col gap-4">
+        <SpeciesBadge species={product.species} />
+        <h1 className="text-3xl font-bold">{product.name}</h1>
+        <p className="text-sm text-muted-foreground capitalize">
+          {product.category}
+        </p>
+        <p className="text-2xl font-semibold text-primary">
+          ₹{product.price}
+        </p>
+        <p className="text-sm text-muted-foreground">
+          In stock: {product.stock_quantity}
+        </p>
+
+        {line ? (
+          <div className="flex items-center gap-3 pt-2">
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={() => void decreaseQuantity(product.id)}
+            >
+              -
+            </Button>
+            <span className="w-8 text-center font-medium">
+              {line.quantity}
+            </span>
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={() => void increaseQuantity(product.id)}
+            >
+              +
+            </Button>
+          </div>
+        ) : (
+          <Button size="lg" className="mt-2 w-fit" onClick={handleAdd}>
+            Add to cart
+          </Button>
+        )}
+      </div>
     </div>
   );
 }

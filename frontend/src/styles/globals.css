@@ -1,0 +1,95 @@
+@import "tailwindcss";
+
+/*
+  Design tokens for the "Playful Bold" direction — coral primary, a
+  purple "pop" reserved for sparing accents (badges, highlights), never
+  used as a second primary. Light-only by design; no dark-mode block.
+*/
+:root {
+  --background: #ffffff;
+  --foreground: #201a2b;
+
+  --card: #ffffff;
+  --card-foreground: #201a2b;
+
+  --popover: #ffffff;
+  --popover-foreground: #201a2b;
+
+  --primary: #ff6552;
+  --primary-foreground: #ffffff;
+
+  /* Neutral, but tinted slightly toward the purple pop rather than pure
+     grey — a chosen neutral, not a default one. */
+  --secondary: #f5f3fa;
+  --secondary-foreground: #201a2b;
+
+  --muted: #f5f3fa;
+  --muted-foreground: #6e6580;
+
+  --accent: #ffe1db;
+  --accent-foreground: #201a2b;
+
+  --destructive: #e5484d;
+  --destructive-foreground: #ffffff;
+
+  --border: #ece9f5;
+  --input: #ece9f5;
+  --ring: #ff6552;
+
+  --radius: 0.625rem;
+
+  /* Reserved for sparing use only — an "eyebrow" badge, a highlight tag.
+     Never a button or large surface fill; that's what --primary is for. */
+  --pop: #7c5cff;
+  --pop-foreground: #ffffff;
+  --pop-soft: #eee9ff;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --color-pop: var(--pop);
+  --color-pop-foreground: var(--pop-foreground);
+  --color-pop-soft: var(--pop-soft);
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+* {
+  border-color: var(--border);
+}

@@ -1,5 +1,6 @@
 import { useState, useRef, useCallback } from "react";
 import type { ChatMessage } from "../types/chat";
+import { WS_BASE_URL } from "../api/config";
 
 export function useChatSocket() {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -9,7 +10,7 @@ export function useChatSocket() {
   const connect = useCallback(() => {
     if (socketRef.current) return;
 
-    const socket = new WebSocket("ws://localhost:8000/ws/chat");
+    const socket = new WebSocket(`${WS_BASE_URL}/ws/chat`);
     socketRef.current = socket;
 
     socket.onopen = () => {

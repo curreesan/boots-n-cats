@@ -1,14 +1,16 @@
 import { createContext } from "react";
 import type { CartLine } from "../types/cart";
-import type { Product } from "../types/product";
 
 export type CartContextType = {
   items: CartLine[];
-  addItem: (product: Product) => void;
-  increaseQuantity: (productId: string) => void;
-  decreaseQuantity: (productId: string) => void;
-  removeItem: (productId: string) => void;
-  clearCart: () => void;
+  subtotal: number;
+  loading: boolean;
+  error: string | null;
+  addItem: (productId: string, quantity?: number) => Promise<void>;
+  increaseQuantity: (productId: string) => Promise<void>;
+  decreaseQuantity: (productId: string) => Promise<void>;
+  removeItem: (productId: string) => Promise<void>;
+  clearCart: () => Promise<void>;
 };
 
 export const CartContext = createContext<CartContextType | null>(null);

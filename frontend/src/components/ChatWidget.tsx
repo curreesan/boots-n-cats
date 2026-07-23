@@ -1,7 +1,8 @@
 import { useState } from "react";
+import { MessageCircle, X } from "lucide-react";
 import { useAuth } from "../context/useAuth";
+import { Button } from "@/components/ui/button";
 import ChatWindow from "./ChatWindow";
-import "../styles/ChatWidget.css";
 
 function ChatWidget() {
   const { user } = useAuth();
@@ -10,11 +11,20 @@ function ChatWidget() {
   if (!user) return null;
 
   return (
-    <div className="chat-widget">
+    <div className="fixed right-6 bottom-6 z-20 flex flex-col items-end gap-3">
       {open && <ChatWindow />}
-      <button className="chat-widget__toggle" onClick={() => setOpen(!open)}>
-        {open ? "Close" : "Chat"}
-      </button>
+      <Button
+        size="icon"
+        className="size-14 rounded-full shadow-lg"
+        onClick={() => setOpen(!open)}
+        aria-label={open ? "Close chat" : "Open chat"}
+      >
+        {open ? (
+          <X className="size-6" />
+        ) : (
+          <MessageCircle className="size-6" />
+        )}
+      </Button>
     </div>
   );
 }

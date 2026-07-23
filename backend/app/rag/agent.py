@@ -1,40 +1,31 @@
 import json
+import logging
+import re
 
-from openai import OpenAI
+from openai import AsyncOpenAI
 from sqlmodel.ext.asyncio.session import AsyncSession
 
 from app.core.config import settings
+from app.rag.prompts import build_system_prompt
 from app.rag.tools import (
     tool_search_knowledge,
     tool_search_products,
     tool_search_pets,
+    tool_add_to_cart,
     tool_create_consultation,
     TOOL_SCHEMAS,
 )
 
-client = OpenAI(base_url=settings.ollama_base_url, api_key="ollama")
+client = AsyncOpenAI(base_url=settings.ollama_base_url, api_key="ollama")
+logger = logging.getLogger(__name__)
 
-SYSTEM_PROMPT = """
-You are a helpful assistant for Boots and Cats, a pet store.
-Answer questions about products, pets, and store policies using the tools
-available to you. Always use search_knowledge for policy/care questions —
-never answer those from memory. If a tool returns no relevant results,
-say you don't have that information rather than guessing.
+SYSTEM_PROMPT = build_system_prompt()
 
-To submit an adoption consultation:
-1. First call search_pets to find the pet's real id (a UUID). Never guess
-   or invent a pet_id — it must come from a search_pets result.
-2. You must have all three of: pet_id, contact, and preferred_time before
-   offering to confirm. If the user hasn't given contact info or a
-   preferred time, ASK for them explicitly — do not invent, guess, or use
-   placeholder values like "your email" or "example.com" under any
-   circumstances.
-3. Once you have all three real values, respond with EXACTLY this format:
-   "Confirm consultation request for [pet name] at [preferred time]? Reply YES to book."
-4. Do not call create_consultation yet at this point — just ask.
-5. Only when the user's next message is exactly "YES" (case-insensitive),
-   call create_consultation using the exact values already collected.
-"""
+# Matches a raw UUID (e.g. from a tool's "id=..." output) that leaked into
+# the model's final answer despite the prompt telling it not to show ids —
+# small local models don't reliably follow that instruction, so this is a
+# guaranteed backstop rather than relying on prompt compliance alone.
+_UUID_RE = re.compile(r"\b[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\b")
 
 
 async def run_agent(
@@ -54,16 +45,17 @@ async def run_agent(
     messages.append({"role": "user", "content": user_message})
 
     while True:
-        response = client.chat.completions.create(
+        response = await client.chat.completions.create(
             model=settings.ollama_chat_model,
             messages=messages,
             tools=TOOL_SCHEMAS,
+            temperature=0.2,  # lower = more consistent tool-calling behavior, less improvisation
         )
 
         message = response.choices[0].message
 
         if not message.tool_calls:
-            return message.content
+            return _UUID_RE.sub("", message.content) if message.content else message.content
 
         messages.append({"role": "assistant", "content": message.content, "tool_calls": message.tool_calls})
 
@@ -80,16 +72,22 @@ async def _execute_tool(tool_call, session: AsyncSession, user_id: str) -> str:
     """Dispatches a tool call to its actual Python function."""
     name = tool_call.function.name
     args = json.loads(tool_call.function.arguments)
+    logger.info("tool call: %s(%s)", name, args)
 
     if name == "search_knowledge":
-        return await tool_search_knowledge(args["query"])
-    if name == "search_products":
-        return await tool_search_products(args.get("species"), args.get("category"), session)
-    if name == "search_pets":
-        return await tool_search_pets(args.get("species"), session)
-    if name == "create_consultation":
-        return await tool_create_consultation(
+        result = await tool_search_knowledge(args["query"])
+    elif name == "search_products":
+        result = await tool_search_products(args.get("species"), args.get("category"), session)
+    elif name == "search_pets":
+        result = await tool_search_pets(args.get("species"), session)
+    elif name == "add_to_cart":
+        result = await tool_add_to_cart(args["product_id"], args.get("quantity", 1), user_id, session)
+    elif name == "create_consultation":
+        result = await tool_create_consultation(
             args["pet_id"], args["contact"], args["preferred_time"], user_id, session
         )
+    else:
+        result = f"Unknown tool: {name}"
 
-    return f"Unknown tool: {name}"
+    logger.info("tool result: %s -> %s", name, result[:200])
+    return result

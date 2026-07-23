@@ -1,7 +1,9 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/useAuth";
-import "../styles/Auth.css";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -24,28 +26,43 @@ function Login() {
   }
 
   return (
-    <div className="auth">
-      <h1 className="auth__heading">Login</h1>
-      <form className="auth__form" onSubmit={handleSubmit}>
-        <input
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="Email"
-          required
-        />
-        <input
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          placeholder="Password"
-          required
-        />
-        <button type="submit" className="auth__submit">
-          Login
-        </button>
-      </form>
-      {error && <div className="auth__error">{error}</div>}
+    <div className="flex justify-center py-16">
+      <Card className="w-full max-w-sm">
+        <CardHeader>
+          <CardTitle className="text-center text-2xl">Login</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
+            <Input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Email"
+              required
+            />
+            <Input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Password"
+              required
+            />
+            <Button type="submit">Login</Button>
+            {error && (
+              <p className="text-center text-sm text-destructive">{error}</p>
+            )}
+          </form>
+          <p className="mt-4 text-center text-sm text-muted-foreground">
+            Don&apos;t have an account?{" "}
+            <Link
+              to="/register"
+              className="font-medium text-primary hover:underline"
+            >
+              Register
+            </Link>
+          </p>
+        </CardContent>
+      </Card>
     </div>
   );
 }

@@ -24,6 +24,24 @@ class Settings(BaseSettings):
     ollama_embedding_model: str = "nomic-embed-text"
     embedding_dimension: int = 768
 
+    # Supabase Storage (product/pet images)
+    supabase_url: str
+    supabase_service_key: str
+    supabase_storage_bucket: str = "images"
+
+    # The deployed frontend's origin, for CORS. Falls back to Vite's local
+    # dev server address so nothing breaks if it's left unset in dev.
+    frontend_url: str = "http://localhost:5173"
+
+    # "development" (default, plain http locally) or "production" (served
+    # over https) — gates cookie `secure`, since that flag would otherwise
+    # block cookies entirely on a local http:// dev server.
+    environment: str = "development"
+
+    @property
+    def is_production(self) -> bool:
+        return self.environment == "production"
+
     class Config:
         env_file = ".env"
 

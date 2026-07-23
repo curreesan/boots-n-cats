@@ -18,11 +18,19 @@ class PetBase(SQLModel):
 
 
 class Pet(PetBase, table=True):
-    """The actual Postgres table — is-a PetBase, plus the id column."""
+    """
+    The actual Postgres table — is-a PetBase, plus the id column.
+
+    is_active powers soft-delete: admin "delete" sets this False instead
+    of removing the row, so past AdoptionConsultation rows can still
+    resolve the pet they point to instead of being orphaned by a hard
+    delete.
+    """
 
     __tablename__ = "pets"
 
     id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
+    is_active: bool = Field(default=True)
 
 
 class PetCreate(PetBase):

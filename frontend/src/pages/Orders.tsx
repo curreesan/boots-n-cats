@@ -1,36 +1,40 @@
 import { Link } from "react-router-dom";
 import { useOrders } from "../hooks/useOrders";
-import "../styles/Orders.css";
+import { Card } from "@/components/ui/card";
 
 function Orders() {
   const { orders, loading, error } = useOrders();
 
-  if (loading) return <div className="orders__status">Loading...</div>;
-  if (error)
-    return <div className="orders__status orders__status--error">{error}</div>;
+  if (loading)
+    return <div className="py-12 text-muted-foreground">Loading...</div>;
+  if (error) return <div className="py-12 text-destructive">{error}</div>;
 
   return (
-    <div className="orders">
-      <h1 className="orders__heading">Orders</h1>
+    <div className="flex flex-col gap-6 py-10">
+      <h1 className="text-3xl font-bold">Orders</h1>
 
       {orders.length === 0 ? (
-        <div className="orders__status">No orders yet.</div>
+        <p className="text-muted-foreground">No orders yet.</p>
       ) : (
-        <div className="orders__list">
-          {orders.map((order) => (
+        <Card className="gap-0 overflow-hidden py-0">
+          {orders.map((order, i) => (
             <Link
               key={order.id}
               to={`/orders/${order.id}`}
-              className="orders__row"
+              className={`flex items-center justify-between px-6 py-4 hover:bg-accent ${
+                i !== orders.length - 1 ? "border-b border-border" : ""
+              }`}
             >
-              <span className="orders__id">Order #{order.id.slice(0, 8)}</span>
-              <span className="orders__date">
+              <span className="font-medium">
+                Order #{order.id.slice(0, 8)}
+              </span>
+              <span className="text-sm text-muted-foreground">
                 {new Date(order.created_at).toLocaleDateString()}
               </span>
-              <span className="orders__total">₹{order.total_amount}</span>
+              <span className="font-medium">₹{order.total_amount}</span>
             </Link>
           ))}
-        </div>
+        </Card>
       )}
     </div>
   );

@@ -1,12 +1,14 @@
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/useAuth";
-import "../styles/Account.css";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 
 function Account() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
 
-  if (!user) return <div className="account__status">Not logged in.</div>;
+  if (!user)
+    return <div className="py-12 text-muted-foreground">Not logged in.</div>;
 
   async function handleLogout() {
     await logout();
@@ -14,27 +16,39 @@ function Account() {
   }
 
   return (
-    <div className="account">
-      <h1 className="account__heading">Account</h1>
+    <div className="flex flex-col gap-6 py-10">
+      <h1 className="text-3xl font-bold">Account</h1>
 
-      <div className="account__card">
-        <div className="account__row">
-          <span className="account__label">Name</span>
-          <span>{user.name}</span>
-        </div>
-        <div className="account__row">
-          <span className="account__label">Email</span>
-          <span>{user.email}</span>
-        </div>
-        <div className="account__row">
-          <span className="account__label">Role</span>
-          <span>{user.role}</span>
-        </div>
-      </div>
+      <Card className="max-w-md gap-0 py-0">
+        <CardContent className="divide-y divide-border p-0">
+          <div className="flex items-center justify-between px-6 py-4">
+            <span className="text-sm font-medium text-muted-foreground">
+              Name
+            </span>
+            <span>{user.name}</span>
+          </div>
+          <div className="flex items-center justify-between px-6 py-4">
+            <span className="text-sm font-medium text-muted-foreground">
+              Email
+            </span>
+            <span>{user.email}</span>
+          </div>
+          <div className="flex items-center justify-between px-6 py-4">
+            <span className="text-sm font-medium text-muted-foreground">
+              Role
+            </span>
+            <span className="capitalize">{user.role}</span>
+          </div>
+        </CardContent>
+      </Card>
 
-      <button className="account__logout" onClick={handleLogout}>
+      <Button
+        variant="outline"
+        className="w-fit border-destructive text-destructive hover:bg-destructive hover:text-white"
+        onClick={handleLogout}
+      >
         Logout
-      </button>
+      </Button>
     </div>
   );
 }

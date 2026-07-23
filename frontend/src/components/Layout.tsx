@@ -1,13 +1,12 @@
 import { Outlet } from "react-router-dom";
 import Navbar from "./Navbar";
 import ChatWidget from "./ChatWidget";
-import "../styles/Layout.css";
 
 function Layout() {
   return (
-    <div>
+    <div className="min-h-screen bg-background">
       <Navbar />
-      <main className="layout__content">
+      <main className="mx-auto max-w-6xl px-6">
         <Outlet />
       </main>
       <ChatWidget />

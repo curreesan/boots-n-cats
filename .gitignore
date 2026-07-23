@@ -1,0 +1,35 @@
+# Python
+__pycache__/
+*.pyc
+venv/
+.env
+
+# Node
+node_modules/
+dist/
+dist-ssr/
+*.local
+
+# Logs
+*.log
+logs
+
+# Editor/OS clutter
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Local-only project docs/scratch scripts — keep on disk, never commit
+PROJECT_CONTEXT.md
+backend/test.py
+backend/test_agent.py
+backend/test/fetch_images.py
+backend/test/image_results.json
+backend/test/verify_tools.py
+backend/scripts/upload_images_to_supabase.py

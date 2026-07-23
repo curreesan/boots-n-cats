@@ -1,5 +1,6 @@
 import type { User } from "../types/user";
 import { API_BASE_URL } from "./config";
+import { apiFetch } from "./apiFetch";
 
 export async function registerUser(
   email: string,
@@ -24,13 +25,12 @@ export async function loginUser(
   email: string,
   password: string,
 ): Promise<User> {
-  const response = await fetch(
-    `${API_BASE_URL}/auth/login?email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`,
-    {
-      method: "POST",
-      credentials: "include",
-    },
-  );
+  const response = await fetch(`${API_BASE_URL}/auth/login`, {
+    method: "POST",
+    credentials: "include",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, password }),
+  });
 
   if (!response.ok) {
     throw new Error("Invalid email or password");
@@ -47,9 +47,11 @@ export async function logoutUser(): Promise<void> {
 }
 
 export async function getCurrentUser(): Promise<User | null> {
-  const response = await fetch(`${API_BASE_URL}/auth/me`, {
-    credentials: "include",
-  });
+  // Uses apiFetch (not raw fetch) deliberately: this is the call that
+  // checks session validity on app load, so it's exactly the case where a
+  // just-expired access token should trigger a silent refresh instead of
+  // treating the user as logged out.
+  const response = await apiFetch("/auth/me");
 
   if (!response.ok) {
     return null;

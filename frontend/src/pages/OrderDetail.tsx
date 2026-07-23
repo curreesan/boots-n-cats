@@ -2,7 +2,6 @@ import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import type { OrderDetail as OrderDetailType } from "../types/order";
 import { getOrder } from "../api/orders";
-import "../styles/OrderDetail.css";
 
 function OrderDetail() {
   const { id } = useParams<{ id: string }>();
@@ -24,41 +23,49 @@ function OrderDetail() {
     void load();
   }, [id]);
 
-  if (loading) return <div className="order-detail__status">Loading...</div>;
+  if (loading)
+    return <div className="py-12 text-muted-foreground">Loading...</div>;
   if (error || !data)
-    return <div className="order-detail__status">Order not found.</div>;
+    return <div className="py-12 text-muted-foreground">Order not found.</div>;
 
   const { order, items } = data;
 
   return (
-    <div className="order-detail">
-      <h1 className="order-detail__heading">Order #{order.id.slice(0, 8)}</h1>
-      <div className="order-detail__meta">
+    <div className="flex flex-col gap-2 py-10">
+      <h1 className="text-3xl font-bold">Order #{order.id.slice(0, 8)}</h1>
+      <p className="mb-4 text-sm text-muted-foreground">
         {new Date(order.created_at).toLocaleString()}
+      </p>
+
+      <div className="overflow-x-auto rounded-xl border border-border">
+        <table className="w-full text-sm">
+          <thead className="bg-muted text-muted-foreground">
+            <tr>
+              <th className="px-4 py-3 text-left font-medium">Product</th>
+              <th className="px-4 py-3 text-left font-medium">Unit Price</th>
+              <th className="px-4 py-3 text-left font-medium">Quantity</th>
+              <th className="px-4 py-3 text-left font-medium">Line Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            {items.map((item, i) => (
+              <tr
+                key={item.id}
+                className={i !== items.length - 1 ? "border-b border-border" : ""}
+              >
+                <td className="px-4 py-3">{item.product_name}</td>
+                <td className="px-4 py-3">₹{item.unit_price}</td>
+                <td className="px-4 py-3">{item.quantity}</td>
+                <td className="px-4 py-3">₹{item.unit_price * item.quantity}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
 
-      <table className="order-detail__table">
-        <thead>
-          <tr>
-            <th>Product</th>
-            <th>Unit Price</th>
-            <th>Quantity</th>
-            <th>Line Total</th>
-          </tr>
-        </thead>
-        <tbody>
-          {items.map((item) => (
-            <tr key={item.id}>
-              <td>{item.product_name}</td>
-              <td>₹{item.unit_price}</td>
-              <td>{item.quantity}</td>
-              <td>₹{item.unit_price * item.quantity}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-
-      <div className="order-detail__total">Total: ₹{order.total_amount}</div>
+      <p className="mt-2 text-right text-lg font-semibold text-primary">
+        Total: ₹{order.total_amount}
+      </p>
     </div>
   );
 }

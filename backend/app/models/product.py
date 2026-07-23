@@ -13,17 +13,24 @@ class ProductBase(SQLModel):
     name: str
     species: str  # "dog" | "cat"
     category: str  # "toy" | "mat" | "bed" | "food"
-    price: float
-    stock_quantity: int
+    price: float = Field(ge=0)
+    stock_quantity: int = Field(ge=0)
     image_url: str | None = None
 
 
 class Product(ProductBase, table=True):
-    """The actual Postgres table — is-a ProductBase, plus the id column."""
+    """
+    The actual Postgres table — is-a ProductBase, plus the id column.
+
+    is_active powers soft-delete: admin "delete" sets this False instead
+    of removing the row, so past OrderItem rows can still resolve the
+    product they point to instead of being orphaned by a hard delete.
+    """
 
     __tablename__ = "products"
 
     id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
+    is_active: bool = Field(default=True)
 
 
 class ProductCreate(ProductBase):

@@ -60,7 +60,7 @@ async def ingest_document(
 
         records = []
         for i, chunk in enumerate(chunks):
-            vector = embed_text(chunk)
+            vector = await embed_text(chunk)
             chunk_id = f"{version.id}:{i}"
             records.append({
                 "id": chunk_id,
@@ -73,7 +73,7 @@ async def ingest_document(
                 },
             })
 
-        upsert_chunks(records)
+        await upsert_chunks(records)
 
         version.status = "active"
         version.chunk_count = len(chunks)

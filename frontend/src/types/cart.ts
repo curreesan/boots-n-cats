@@ -1,6 +1,9 @@
-import type { Product } from "./product";
-
 export type CartLine = {
-  product: Product;
+  id: string;
+  product_id: string;
+  product_name: string;
+  unit_price: number;
+  stock_quantity: number;
+  image_url: string | null;
   quantity: number;
 };

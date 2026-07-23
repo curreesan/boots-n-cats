@@ -1,3 +1,5 @@
+import logging
+
 from fastapi import APIRouter, WebSocket, WebSocketDisconnect
 from sqlmodel.ext.asyncio.session import AsyncSession
 
@@ -6,6 +8,7 @@ from app.core.security import decode_token
 from app.rag.agent import run_agent
 
 router = APIRouter()
+logger = logging.getLogger(__name__)
 
 
 @router.websocket("/ws/chat")
@@ -33,12 +36,10 @@ async def websocket_chat(websocket: WebSocket):
             user_message = data.get("content", "")
 
             async with AsyncSession(engine) as session:
-                try:   
-                  answer = await run_agent(user_message, session, user_id, history)
-                except Exception as e: 
-                    print(f"AGENT ERROR: {e}")
-                    import traceback
-                    traceback.print_exc()
+                try:
+                    answer = await run_agent(user_message, session, user_id, history)
+                except Exception:
+                    logger.exception("Agent error for user %s", user_id)
                     answer = "Sorry, I couldn't process your request at the moment. Please try again later."
 
             history.append({"role": "user", "content": user_message})

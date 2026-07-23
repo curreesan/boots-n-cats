@@ -13,3 +13,4 @@ pinecone
 openai
 pypdf
 python-multipart
+supabase

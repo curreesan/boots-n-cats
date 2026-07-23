@@ -3,8 +3,9 @@ import { useParams, useNavigate } from "react-router-dom";
 import { usePet } from "../hooks/usePet";
 import { useAuth } from "../context/useAuth";
 import { createConsultation } from "../api/consultations";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import SpeciesBadge from "../components/SpeciesBadge";
-import "../styles/PetDetail.css";
 
 function PetDetail() {
   const { id } = useParams<{ id: string }>();
@@ -18,9 +19,10 @@ function PetDetail() {
   const [submitted, setSubmitted] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
 
-  if (loading) return <div className="pet-detail__status">Loading...</div>;
+  if (loading)
+    return <div className="py-12 text-muted-foreground">Loading...</div>;
   if (error || !pet)
-    return <div className="pet-detail__status">Pet not found.</div>;
+    return <div className="py-12 text-muted-foreground">Pet not found.</div>;
 
   function handleRequestClick() {
     if (!user) {
@@ -43,50 +45,61 @@ function PetDetail() {
   }
 
   return (
-    <div className="pet-detail">
-      <SpeciesBadge species={pet.species} />
-      <h1 className="pet-detail__name">{pet.name}</h1>
-      <div className="pet-detail__meta">{pet.breed}</div>
-      <p className="pet-detail__description">{pet.description}</p>
-
-      {submitted && (
-        <div className="pet-detail__notice pet-detail__notice--success">
-          Request submitted — we'll be in touch.
-        </div>
-      )}
-
-      {!submitted && !showForm && (
-        <button className="pet-detail__button" onClick={handleRequestClick}>
-          Request adoption consultation
-        </button>
-      )}
-
-      {showForm && (
-        <form className="pet-detail__form" onSubmit={handleSubmit}>
-          <input
-            type="text"
-            value={contact}
-            onChange={(e) => setContact(e.target.value)}
-            placeholder="Phone or email"
-            required
+    <div className="grid grid-cols-1 gap-10 py-10 md:grid-cols-2">
+      <div className="aspect-[4/3] w-full overflow-hidden rounded-xl bg-muted">
+        {pet.image_url && (
+          <img
+            src={pet.image_url}
+            alt={pet.name}
+            className="size-full object-cover"
           />
-          <input
-            type="text"
-            value={preferredTime}
-            onChange={(e) => setPreferredTime(e.target.value)}
-            placeholder="Preferred time to call"
-            required
-          />
-          <button type="submit" className="pet-detail__button">
-            Submit
-          </button>
-          {submitError && (
-            <div className="pet-detail__notice pet-detail__notice--error">
-              {submitError}
-            </div>
-          )}
-        </form>
-      )}
+        )}
+      </div>
+
+      <div className="flex flex-col gap-4">
+        <SpeciesBadge species={pet.species} />
+        <h1 className="text-3xl font-bold">{pet.name}</h1>
+        <p className="text-sm text-muted-foreground">{pet.breed}</p>
+        <p className="leading-relaxed">{pet.description}</p>
+
+        {submitted && (
+          <div className="rounded-lg bg-accent px-4 py-3 text-sm text-accent-foreground">
+            Request submitted — we&apos;ll be in touch.
+          </div>
+        )}
+
+        {!submitted && !showForm && (
+          <Button size="lg" className="mt-2 w-fit" onClick={handleRequestClick}>
+            Request adoption consultation
+          </Button>
+        )}
+
+        {showForm && (
+          <form
+            className="flex max-w-sm flex-col gap-3 pt-2"
+            onSubmit={handleSubmit}
+          >
+            <Input
+              value={contact}
+              onChange={(e) => setContact(e.target.value)}
+              placeholder="Phone or email"
+              required
+            />
+            <Input
+              value={preferredTime}
+              onChange={(e) => setPreferredTime(e.target.value)}
+              placeholder="Preferred time to call"
+              required
+            />
+            <Button type="submit" className="w-fit">
+              Submit
+            </Button>
+            {submitError && (
+              <p className="text-sm text-destructive">{submitError}</p>
+            )}
+          </form>
+        )}
+      </div>
     </div>
   );
 }

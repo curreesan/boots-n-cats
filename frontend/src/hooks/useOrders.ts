@@ -11,7 +11,7 @@ export function useOrders() {
     async function loadOrders() {
       try {
         const data = await getOrders();
-        setOrders(data);
+        setOrders(data.items);
       } catch {
         setError("Failed to load orders");
       } finally {
