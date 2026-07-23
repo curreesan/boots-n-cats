@@ -4,7 +4,8 @@ A full-stack pet store with an agentic RAG chatbot — browse products and pets,
 persistent cart, check out, book adoption consultations, and get help from an AI assistant
 that can actually search the catalog, add items to your cart, and place orders on your behalf.
 
-**Live demo:** _TBD — link coming after deployment_
+**Live demo:** [boots-n-cats-eight.vercel.app](https://boots-n-cats-eight.vercel.app/)
+**Backend API:** [boots-n-cats.onrender.com](https://boots-n-cats.onrender.com/) (root route lists all API routes; free-tier Render, may take ~30s to wake up on first request)
 
 ## Features
 
